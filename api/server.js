@@ -90,9 +90,24 @@ server.put('/api/users/:id', async (req, res) => {
     }
 });
 
-// server.delete('/api/users/:id', (req, res) => {
-
-// });
+server.delete('/api/users/:id', async (req, res) => {
+    try {
+        const userForDeletion = await Users.findById(req.params.id);
+        if (!userForDeletion) {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist"
+            })
+        } else {
+            const userDeleted = await Users.remove(userForDeletion.id)
+            res.status(200).json(userDeleted)
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: "The user could not be removed",
+            error: err.message
+        })
+    }
+});
 
 
 module.exports = server; // EXPORT YOUR SERVER instead of {}
