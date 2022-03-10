@@ -2,6 +2,7 @@
 const express = require('express');
 
 const server = express();
+server.use(express.json());
 
 const Users = require('./users/model');
 
@@ -41,9 +42,25 @@ server.get('/api/users/:id', (req, res) => {
         }) 
 });
 
-// server.post('/api/users', (req, res) => {
-
-// });
+server.post('/api/users', (req, res) => {
+    const user = req.body;
+    if (!user.name || !user.bio) {
+        res.status(400).json({
+            message: "Please provide name and bio for the user"
+        });
+    } else {
+        Users.insert(user)
+            .then(newUserCreated => {
+                res.status(201).json(newUserCreated);
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message: "There was an error while saving the user to the database",
+                    error: err.message
+                })
+            })
+    };
+});
 
 // server.put('/api/users/:id', (req, res) => {
 
