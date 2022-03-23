@@ -71,7 +71,7 @@ server.delete('/api/users/:id', async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({
-            message: "error creating user",
+            message: "error deleting user",
             err: err.message
         })
     }
